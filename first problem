@@ -1,0 +1,55 @@
+question link -: https://practice.geeksforgeeks.org/problems/inversion-of-array-1587115620/1?utm_source=gfg&utm_medium=article&utm_campaign=bottom_sticky_on_article
+
+solution-:
+
+class Solution
+{.
+    static long inversionCount(long a[], long n)
+    {
+        // Your Code Here
+          long[] temp = new long[(int) n]; // Temporary array to store the merged result
+        return mergeSort(a, temp, 0, (int) n - 1); // Call the helper mergeSort function
+    }
+
+    static long mergeSort(long a[], long temp[], int l, int r) {
+        long res = 0;
+
+        if (l < r) {
+            int mid = l + (r - l) / 2;
+            res += mergeSort(a, temp, l, mid); // Count inversions in the left subarray
+            res += mergeSort(a, temp, mid + 1, r); // Count inversions in the right subarray
+            res += merge(a, temp, l, mid, r); // Merge the two subarrays and count inversions
+        }
+
+        return res;
+    }
+
+    static long merge(long[] a, long[] temp, int l, int m, int r) {
+        long res = 0;
+
+        int i = l, j = m + 1, k = l;
+
+        while (i <= m && j <= r) {
+            if (a[i] <= a[j]) {
+                temp[k++] = a[i++];
+            } else {
+                temp[k++] = a[j++];
+                res += m - i + 1; // Increment inversion count
+            }
+        }
+
+        while (i <= m) {
+            temp[k++] = a[i++];
+        }
+        while (j <= r) {
+            temp[k++] = a[j++];
+        }
+
+        // Copy the merged result from temp back to a
+        for (i = l; i <= r; i++) {
+            a[i] = temp[i];
+        }
+
+        return res; 
+    }
+}
